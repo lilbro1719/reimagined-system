@@ -1,0 +1,45 @@
+from bs4 import BeautifulSoup
+import requests
+
+
+filename = ("Premier League.csv")
+f = open(filename, "a")
+
+headers = "Year, Team Name, Played, Win, Draw, Lose, Points"
+f.write(headers)
+
+for x in range(11,23):
+    url = f'https://www.skysports.com/premier-league-table/20{x}'
+
+    html_text = requests.get(url).text
+    soup = BeautifulSoup(html_text, 'lxml')
+
+    league_table = soup.find('table', class_ = 'standing-table__table')
+    teams = league_table.find_all('tbody')
+
+
+
+
+    for team in teams:
+        year = f"20{x}"
+        rows = team.find_all('tr')
+        for row in rows:
+            team_name = row.find('td', class_ = 'standing-table__cell standing-table__cell--name').text.strip()
+            played = row.find_all('td', class_ = 'standing-table__cell')[2].text
+            win = row.find_all('td', class_='standing-table__cell')[3].text
+            draw = row.find_all('td', class_='standing-table__cell')[4].text
+            lose = row.find_all('td', class_='standing-table__cell')[5].text
+            points = row.find_all('td', class_='standing-table__cell')[9].text
+
+            print(f"Year : {year}")
+            print(f"Team Name : {team_name}")
+            print(f"Played : {played}")
+            print(f"Win : {win}")
+            print(f"Draw : {draw}")
+            print(f"Lose : {lose}")
+            print(f"Points : {points}")
+            print(f" ")
+
+
+
+
